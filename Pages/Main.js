@@ -4,7 +4,6 @@ import {
     addDoc, collection, getDocs,
      doc, updateDoc, where, query} from "firebase/firestore";
 import {useState} from 'react'
-import { TouchableOpacity } from 'react-native';
 
 const Main =  (props) => {
     const [studentInfo, setStudentInfo] = useState();
@@ -12,7 +11,7 @@ const Main =  (props) => {
 
     const readfromDB = async () => {
         try{
-            const data = await getDocs(collection(db, "student"))
+            const data = await getDocs(collection(db, "Teacher Information"))
             setStudentInfo(data.docs.map(doc => ({ ...doc.data(), id: doc.id})));
         } catch(error) {
             console.log(error.message)
@@ -28,7 +27,11 @@ const Main =  (props) => {
         <View>
             {studentInfo?.map((item, idx) => {
                 return(
+                    <Text>
                         <Text>{item.name}</Text>
+                        <Text>{item.phonenumber}</Text>
+                        <Text>{item.score}</Text>
+                    </Text>
                 )
             })}
         </View>

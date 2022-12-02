@@ -13,7 +13,7 @@ const Login = (props) => {
     
     const readfromDB = async() => {
         try{
-            const data = await getDocs(collection(db, "student"))
+            const data = await getDocs(collection(db, "Teacher Information"))
             
             setTeacherInfo(data.docs.map(doc=>(
                 {...doc.data(), id: doc.id}
@@ -29,7 +29,7 @@ const Login = (props) => {
         setPassword(event)
     }
 
-    if (flag) {
+    if (Flag) {
         readfromDB()
         setFlag(false)
     }
