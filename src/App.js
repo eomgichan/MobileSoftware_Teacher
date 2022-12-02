@@ -5,7 +5,6 @@ import FindId from './Pages/FindId'
 import FindPassword from './Pages/FindPassword'
 import Signup from './Pages/Signup'
 import Main from './Pages/Main'
-import StudentInformation from './Pages/StudentInfomation'
 
 const Stack = createStackNavigator();
 
