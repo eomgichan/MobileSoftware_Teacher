@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
  export default function App() {
    return (
      <NavigationContainer>
-       <Stack.Navigator initialRouteName='Main'>
+       <Stack.Navigator initialRouteName='Login'>
          <Stack.Screen name = "Login" component = {Login}/>
          <Stack.Screen name = "FindId" component = {FindId}/>
          <Stack.Screen name = "FindPassword" component = {FindPassword}/>
