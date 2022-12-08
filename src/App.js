@@ -17,7 +17,6 @@ const Stack = createStackNavigator();
          <Stack.Screen name = "FindPassword" component = {FindPassword}/>
          <Stack.Screen name = "Signup" component = {Signup}/>
          <Stack.Screen name = "Main" component = {Main}/>
-         <Stack.Screen name = "StudentInformation" component = {StudentInformation}/>
        </Stack.Navigator>
      </NavigationContainer>
    );
