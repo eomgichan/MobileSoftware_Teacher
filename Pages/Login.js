@@ -1,4 +1,5 @@
-import {View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import {View, StyleSheet, Image,TouchableOpacity, TextInput, Text} from 'react-native';
+import login from '../assets/Login.png'
 import {useState} from 'react';
 import {db} from '../firebaseConfig'
 import {
@@ -6,14 +7,14 @@ import {
      doc, updateDoc, where, query} from "firebase/firestore";
 
 const Login = (props) => {
-    const [Flag,setFlag] = useState(true);
-    const [Id, setID] = useState("");
-    const [Password, setPassword] = useState("");
-    const [TeacherInfo, setTeacherInfo] = useState();
+    const [flag,setFlag] = useState(true);
+    const [ID, setID] = useState("");
+    const [password, setPassword] = useState("");
+    const [teacherInfo, setTeacherInfo] = useState();
     
     const readfromDB = async() => {
         try{
-            const data = await getDocs(collection(db, "Teacher Information"))
+            const data = await getDocs(collection(db, "teacher"))
             
             setTeacherInfo(data.docs.map(doc=>(
                 {...doc.data(), id: doc.id}
@@ -29,73 +30,105 @@ const Login = (props) => {
         setPassword(event)
     }
 
-    if (Flag) {
+    if (flag) {
         readfromDB()
         setFlag(false)
     }
 
-    const GoMain = () => {
-        let check = false
-        TeacherInfo?.map((item) => {
-            if (item.teacherid == Id &&
-                item.Password == Password) {
+    const GoHome =() => {
+        let have = false
+        teacherInfo?.map(async (item) => {
+            if (item.teacher_id == ID &&
+                item.password == password) {                    
                     have = true
-                    props.navigation.navigate("Main")
+                    let itemList = []
+                    try {
+                        const q = query(collection(db,"answer"), where ('teacher_id', "==", ID))
+                        const data = await getDocs(q)
+
+                        data.docs.map(doc=>(
+                            itemList.push(doc.data())
+                        ))
+                    }catch (error) {
+                        console.log(error)
+                    }
+                    props.navigation.navigate("Home",
+                    {myClass : item.class,
+                     name : item.name})
             }
         })
-        if (!check) {
-            alert("Incorrect Id or Password")
+        if (!have) {
+            alert("Invalid ID or password.")
         }
     }
     return (
-        <View style = {styles.LoginLocation}>
-            <TextInput
-            value = {Id}
-            onChangeText = {changeID}
+        <View>
+            <View
+                style ={{marginTop:130, marginLeft :'35%', marginRight:20, backgroundColor:'#FBFAFA', width: 390, height:300}}
+            >
+                <Text
+                    style={{marginLeft:10, marginTop:10, fontSize:15}}
+                >ID:</Text>
+                <TextInput
+                value = {ID}
+                onChangeText = {changeID}
+                style ={{marginLeft:10, width:'100%', marginTop:10}}
+                />
+                <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: 1,
+                    marginLeft:10,
+                    marginRight:10
+                }}
+                />
+                <Text
+                    style={{marginTop:30, marginLeft:10, fontSize:15}}
+                >Password:</Text>
+                <TextInput
+                value = {password}
+                onChangeText = {changePassword}
+                style ={{marginLeft:10, width:'100%', marginTop:10}}
             />
-            <TextInput
-            value = {Password}
-            onChangeText = {changePassword}
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: 1,
+                    marginLeft:10,
+                    marginRight:10
+                }}
             />
-            <TouchableOpacity
-                onPress={GoMain}>
-                    <Text>Log In</Text>
-                </TouchableOpacity>
-            <View style = {{
-                flexDirection: 'row'
-            }}>
                 <TouchableOpacity
-                    onPress={()=>{
-                        props.navigation.navigate("FindId")
-                    }}>
-                    <Text>Find Id</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={()=>{
-                        props.navigation.navigate("FindPassword")
-                    }}>
-                    <Text>Find Password</Text>
+                onPress={()=>{
+                    props.navigation.navigate("FindPassword")
+                }}>
+                <Text
+                    style ={{marginLeft:10, marginTop:20, fontSize:15, color : '#6E7AE5', textDecorationLine :'underline'}}
+                    >Forgot your Password?</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
+                    style={{marginTop:10}}
                     onPress={()=>{
                         props.navigation.navigate("Signup")
                     }}>
-                    <Text>Sign Up</Text>
+                    <Text
+                        style ={{marginLeft:10,marginTop:25, fontSize:15, color : '#6E7AE5', textDecorationLine :'underline'}}
+                    >Sign Up</Text>
+                </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                style = {{width:100}}
+                onPress={GoHome}>
+                    <Image
+                        style={{width:390, height:50, marginLeft:'550%'}}
+                        source={login}
+                        resizeMode="contain"
+                    />
                 </TouchableOpacity>
             </View>
-        </View>
+        
     );
 }
 
-const styles = StyleSheet.create({
-    LoginLocation: {
-      width:'70',
-      marginTop:200,
-      marginLeft :200,
-      marginRight:200,
-      fontSize:25,
-      padding:10
-    },
-  });
 
 export default Login;
