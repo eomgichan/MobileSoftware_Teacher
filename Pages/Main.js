@@ -6,12 +6,12 @@ import {
 import {useState} from 'react'
 
 const Main =  (props) => {
-    const [studentInfo, setStudentInfo] = useState();
+    const [teacherInfo, setStudentInfo] = useState();
     const [Flag,setFlag] = useState(true);
 
     const readfromDB = async () => {
         try{
-            const data = await getDocs(collection(db, "Teacher Information"))
+            const data = await getDocs(collection(db, "teacher"))
             setStudentInfo(data.docs.map(doc => ({ ...doc.data(), id: doc.id})));
         } catch(error) {
             console.log(error.message)
@@ -25,12 +25,12 @@ const Main =  (props) => {
 
     return (
         <View>
-            {studentInfo?.map((item, idx) => {
+            {teacherInfo?.map((item, idx) => {
                 return(
                     <Text>
                         <Text>{item.name}</Text>
                         <Text>{item.phonenumber}</Text>
-                        <Text>{item.score}</Text>
+                        <Text>{item.classnumber}</Text>
                     </Text>
                 )
             })}
